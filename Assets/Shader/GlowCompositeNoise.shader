@@ -42,6 +42,8 @@
             sampler2D _GlowBlurredTex;
             float4 _GlowBlurred_ST;
 
+            float _Intensity;
+
             v2f vert (appdata v)
             {
                 v2f o;
@@ -51,6 +53,27 @@
                 return o;
             }
 
+            float noiseSampler(float3 xyz, float res)
+			{
+				xyz *= res;
+				float3 xyz0 = floor(fmod(xyz,res)) * float3(1,200,1000);
+				float3 xyz1 = floor(fmod(xyz + float3(1,1,1),res))  * float3(1,200,1000);
+
+				float3 f = frac(xyz); f = f*f*(3.0-2.0*f);
+				float4 v = float4(xyz0.x + xyz0.y + xyz0.z , xyz1.x  + xyz0.y + xyz0.z,
+								xyz0.x   + xyz1.y + xyz0.z, xyz1.x  + xyz1.y + xyz0.z);
+				float4 rand = frac(sin(v/res*6.2832)*1000.0);
+				float r0 = lerp(lerp(rand.x,rand.y,f.x),lerp(rand.z,rand.w,f.x),f.y);
+
+				rand = frac(sin((v - xyz0.z + xyz1.z)/res*6.2832)*1000.0);
+				float r1 = lerp(lerp(rand.x,rand.y,f.x),lerp(rand.z,rand.w,f.x),f.y);
+				return lerp(r0,r1,f.z);
+
+
+
+			}
+
+
             fixed4 frag (v2f i) : SV_Target
             {
                 // sample the texture
@@ -59,10 +82,22 @@
                 fixed4 col2 = tex2D(_GlowBlurredTex, i.uv);
 
 
-                // return col2 - col1;
-                // return col + col1 + col2;
-                fixed4 glow = abs(col2) - col1;
+                // // return col2 - col1;
+                // // return col + col1 + col2;
+                // // fixed4 glow = col2 - col1;
+                fixed4 glow = fixed4(lerp(col2,fixed3(0,0,0),col1.r), 1);
                 return col + glow;
+
+
+                // float2 _ObjPoint = float2(0.5,0.5);
+                // float2 uvP = i.uv; 
+                // uvP.x = uvP.x * _ScreenParams.x / _ScreenParams.y;
+
+				// float x = atan2(uvP.y - _ObjPoint.y, uvP.x - _ObjPoint.x)/6.2832 + 0.5;
+				// float y = length(float2(uvP.y - _ObjPoint.y, uvP.x - _ObjPoint.x));
+
+                // float n = noiseSampler(float3(x,y*0.75 - _Time.x * 2, _Time.x * 0.15),16) * 1;
+                // return col +  glow * _Intensity * n;
             }
             ENDCG
         }
