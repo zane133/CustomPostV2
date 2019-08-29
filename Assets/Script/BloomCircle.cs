@@ -17,9 +17,13 @@ public class BloomCircle : MonoBehaviour
     private static RenderTexture prePass;
     private static RenderTexture blurred;
     private static RenderTexture temp;
+    private Camera cam;
 
     void Start()
     {
+        cam = GetComponent<Camera>();
+        cam.depthTextureMode = DepthTextureMode.Depth;
+
         prePass = new RenderTexture(Screen.width, Screen.height, 24, RenderTextureFormat.Default);
         blurred = new RenderTexture(Screen.width >> 2, Screen.height >> 2, 0);
 

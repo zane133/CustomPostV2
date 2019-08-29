@@ -57,7 +57,7 @@
                 if(diff < 0.001)
                     c = float4(1, 0, 0, 1);
                 
-                return float4(1,0,0,1);
+                return c;
                 // return float4(camDepth, camDepth, camDepth, 1); // test camera depth value
                 // return float4(i.linearDepth, i.linearDepth, i.linearDepth, 1); // test our depth
                 // return float4(diff, diff, diff, 1);
