@@ -58,6 +58,7 @@
                 fixed4 col1 = tex2D(_GlowPrePassTex, i.uv);
                 fixed4 col2 = tex2D(_GlowBlurredTex, i.uv);
 
+                // return col1;
                 return col + col1 + col2;
             }
             ENDCG

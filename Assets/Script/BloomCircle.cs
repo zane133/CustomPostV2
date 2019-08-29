@@ -4,12 +4,10 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Camera))]
-[ExecuteInEditMode]
 public class BloomCircle : MonoBehaviour
 {
     [Range(0, 10)]
-    public float Intensity = 2;
-    public GameObject glowTargets = null;
+    public float Intensity = 4;
 
     public static Material compositeMat;
     public static Material blurMat;
@@ -20,7 +18,7 @@ public class BloomCircle : MonoBehaviour
     private static RenderTexture blurred;
     private static RenderTexture temp;
 
-    void OnEnable()
+    void Start()
     {
         prePass = new RenderTexture(Screen.width, Screen.height, 24, RenderTextureFormat.Default);
         blurred = new RenderTexture(Screen.width >> 2, Screen.height >> 2, 0);
@@ -30,6 +28,7 @@ public class BloomCircle : MonoBehaviour
         blurMat.SetVector("_BlurSize", new Vector2(blurred.texelSize.x * 1.5f, blurred.texelSize.y * 1.5f));
 
         commandBuffer = new CommandBuffer();
+        commandBuffer.name = "Glow Effect";
         commandBuffer.SetRenderTarget(prePass);
         commandBuffer.ClearRenderTarget(true, true, Color.black);
         foreach (var obj in glowSystem.GlowObjs)
@@ -57,7 +56,7 @@ public class BloomCircle : MonoBehaviour
     void OnRenderImage(RenderTexture src, RenderTexture dst)
     {
         compositeMat.SetTexture("_ScreenTex", src);
-        //Graphics.ExecuteCommandBuffer(commandBuffer);
+        Graphics.ExecuteCommandBuffer(commandBuffer);
         compositeMat.SetFloat("_Intensity", Intensity);
         Graphics.Blit(src, dst, compositeMat, 0);
     }
