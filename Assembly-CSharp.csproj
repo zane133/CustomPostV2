@@ -61,13 +61,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Script\BloomCircle.cs" />
+    <Compile Include="Assets\Script\BloomNoise.cs" />
     <Compile Include="Assets\Script\CustomGlowObj.cs" />
     <Compile Include="Assets\Script\CustomGlowRenderer.cs" />
     <Compile Include="Assets\Script\CustomGlowSystem.cs" />
     <Compile Include="Assets\Script\PostProcess.cs" />
+    <Compile Include="Assets\Script\Rotate.cs" />
     <Compile Include="Assets\Script\TestWillRender.cs" />
     <None Include="Assets\Shader\bloom.shader" />
     <None Include="Assets\Shader\WhiteFill.shader" />
+    <None Include="Assets\Shader\GlowCompositeNoise.shader" />
     <None Include="Assets\Shader\LightSick.shader" />
     <None Include="Assets\Shader\Gos.shader" />
     <None Include="Assets\Shader\GlowComposite.shader" />
